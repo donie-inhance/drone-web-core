@@ -2,6 +2,7 @@ package io.magpi;
 
 import io.magpi.api.RestApi;
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.http.HttpServer;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.Router;
@@ -20,6 +21,12 @@ public class MainVerticle extends AbstractVerticle {
 
 
         router.mountSubRouter("/api/v1", RestApi.createRouter(vertx));
+
+        HttpServer http = vertx.createHttpServer()
+                .requestHandler(router::accept)
+                .listen(8080);
+
+
 
 
     }

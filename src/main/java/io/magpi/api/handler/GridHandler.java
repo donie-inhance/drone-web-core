@@ -1,0 +1,12 @@
+package io.magpi.api.handler;
+
+import io.vertx.core.Handler;
+import io.vertx.ext.web.RoutingContext;
+
+public class GridHandler implements Handler<RoutingContext> {
+
+    @Override
+    public void handle(RoutingContext event) {
+
+    }
+}
