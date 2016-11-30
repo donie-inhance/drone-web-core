@@ -28,17 +28,24 @@ public class PathElevationHandler implements Handler<RoutingContext> {
             destination=new Coordinate(destinationLatitude,destinationLongitude);
         }else{
 
-            Double bearing=Double.parseDouble(event.request().params().get("bearing"));
-            Integer distance=Integer.parseInt(event.request().params().get("distance"));
-
+            Double bearing=0d;
+            if(event.request().params().contains("bearing")) {
+               bearing= Double.parseDouble(event.request().params().get("bearing"));
+            }
+            Integer distance=1000;
+            if(event.request().params().contains("distance")) {
+              distance= Integer.parseInt(event.request().params().get("distance"));
+            }
             Coordinate startPoint=new Coordinate(latitude,longitude);
 
-             destination= GeoMath.calcEndPoint(startPoint,bearing,distance);
+             destination= GeoMath.destenationPoint(startPoint,bearing,distance);
 
         }
 
-        Integer samples=Integer.parseInt(event.request().params().get("samples"));
-
+        Integer samples=10;
+        if(event.request().params().contains("samples")) {
+            samples=Integer.parseInt(event.request().params().get("samples"));
+        }
 
         MapProvider maps=MapProvider.provider();
 

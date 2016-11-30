@@ -9,7 +9,8 @@ REF:    http://cdn.rawgit.com/chrisveness/geodesy/v1.1.1/latlon-spherical.js
 
 */
     private static final Double R=6371e3;
-    public static Coordinate calcEndPoint(Coordinate startPoint, Double bearing, Integer distance) {
+
+    public static Coordinate destenationPoint(Coordinate startPoint, Double bearing, Integer distance) {
 
         Double δ = distance / R; // angular distance in radians
         Double θ = toRadians(bearing);
@@ -27,7 +28,7 @@ REF:    http://cdn.rawgit.com/chrisveness/geodesy/v1.1.1/latlon-spherical.js
         Double x = cosδ - sinφ1 * sinφ2;
         Double λ2 = λ1 + atan2(y, x);
 
-        return new Coordinate(toDegrees(φ2), (toDegrees(λ2)+540)%360-180);
+        return new Coordinate( toDegrees(φ2), (toDegrees(λ2)+540)%360-180);
 
     }
 }
