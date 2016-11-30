@@ -168,7 +168,7 @@ public class GoogleMapsClient implements MapProvider {
             HttpClient client = ar.result();
 
             String path="/maps/api/elevation/json?locations=LOCATIONS&key=API_KEY"
-                    .replace("LAT",grid.latLongStr())
+                    .replace("LOCATIONS",grid.latLongStr())
                     .replace("API_KEY",ACCESS_TOKEN);
 
 
@@ -214,6 +214,9 @@ public class GoogleMapsClient implements MapProvider {
 
                     });
                 }else{
+                    response.bodyHandler(body->{
+                       System.out.println(body.toString());
+                    });
                     result.fail(new MapProviderException("Google request failed with status "+response.statusMessage()));
                 }
 
