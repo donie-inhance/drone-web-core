@@ -30,6 +30,25 @@ public class RestApi  {
         apiRouter.route(GET,"/elevation/point").handler(new PointElevationHandler());
 
 
+        /*
+            Given lat , long and bearing and distance
+            and return an array of gps coordinates and with elevations
+
+            method :GET
+            params:
+                    latitude ........ gps latitude  start of path
+
+                    longitude ....... gps longitude  start of path
+
+                    bearing  ........ bearing in degrees ........ optional default 0
+
+                    length ......... length of path in meters ... optional default 1000
+
+                    samples ......... how many points on path ... optional default 20
+
+
+
+         */
         apiRouter.route(GET,"/elevation/path").handler(new PathElevationHandler());
 
         /*
@@ -38,17 +57,15 @@ public class RestApi  {
 
             method :GET
             params:
-                    latitude ........ gps latitude
+                    latitude ........ gps latitude  grid center
 
-                    longitude ....... gps longitude
+                    longitude ....... gps longitude  grid center
 
-                    bearing  ........ bearing in degrees ........ format float .....
+                    bearing  ........ bearing in degrees ......... optional default 0
 
-                    gridOffset ...... meters between grid lines . format integer ...
-                                        min 10 .. optional defaults to 50
+                    length .......... length of grid in meters ... optional default 1000
 
-                    gridDimensions .. size of grid .............. format WxL  ......
-                                        max A * B =300 ..min A * B = 9 .. optional defailts to 17x17
+                    samples ......... how many points on a row ... optional default 20
 
 
 

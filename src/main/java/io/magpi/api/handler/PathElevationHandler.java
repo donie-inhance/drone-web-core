@@ -33,12 +33,11 @@ public class PathElevationHandler implements Handler<RoutingContext> {
                bearing= Double.parseDouble(event.request().params().get("bearing"));
             }
             Integer distance=1000;
-            if(event.request().params().contains("distance")) {
-              distance= Integer.parseInt(event.request().params().get("distance"));
+            if(event.request().params().contains("length")) {
+              distance= Integer.parseInt(event.request().params().get("length"));
             }
-            Coordinate startPoint=new Coordinate(latitude,longitude);
 
-             destination= GeoMath.destenationPoint(startPoint,bearing,distance);
+             destination= GeoMath.destinationPoint(start,bearing,distance.doubleValue());
 
         }
 

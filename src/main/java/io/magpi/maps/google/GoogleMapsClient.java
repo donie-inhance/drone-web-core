@@ -1,6 +1,8 @@
-package io.magpi.maps.google_maps;
+package io.magpi.maps.google;
 
 import io.magpi.geo.Coordinate;
+import io.magpi.geo.GeoMath;
+import io.magpi.geo.Grid;
 import io.magpi.geo.Path;
 import io.magpi.maps.MapProvider;
 import io.magpi.maps.MapProviderException;
@@ -44,9 +46,8 @@ public class GoogleMapsClient implements MapProvider {
 
             HttpClient client = ar.result();
 
-            String path="/maps/api/elevation/json?locations=LAT,LONG&key=API_KEY"
-                    .replace("LAT",point.getLatitude().toString())
-                    .replace("LONG",point.getLongitude().toString())
+            String path="/maps/api/elevation/json?locations=LATLONG&key=API_KEY"
+                    .replace("LATLONG",point.latLongStr())
                     .replace("API_KEY",ACCESS_TOKEN);
 
 
@@ -66,10 +67,11 @@ public class GoogleMapsClient implements MapProvider {
                         JsonObject firstResult = results.getJsonObject(0);
                         if(firstResult==null||!firstResult.containsKey("elevation")){
                             result.fail(new MapProviderException("No elevation in google response"));
-                        }
-                        Double elevation = firstResult.getDouble("elevation");
+                        }else {
+                            Double elevation = firstResult.getDouble("elevation");
 
-                        point.setElevation(elevation);
+                            point.setElevation(elevation);
+                        }
                         if(firstResult.containsKey("resolution")){
                             point.setResolution(firstResult.getDouble("resolution"));
                         }
@@ -137,6 +139,78 @@ public class GoogleMapsClient implements MapProvider {
 
                         }
                         result.complete(thePath);
+
+                    });
+                }else{
+                    result.fail(new MapProviderException("Google request failed with status "+response.statusMessage()));
+                }
+
+
+
+            });
+
+            request.end();
+
+        });
+
+        return result;
+    }
+
+    @Override
+    public Future<Grid> getGridElevation(Coordinate center, Double bearing, Double distance, Integer samples) {
+
+        Grid grid= GeoMath.grid(center,bearing,distance,samples);
+
+
+        Future<Grid> result=Future.future();
+        MapProvider.createHttpClient(ar->{
+
+            HttpClient client = ar.result();
+
+            String path="/maps/api/elevation/json?locations=LOCATIONS&key=API_KEY"
+                    .replace("LAT",grid.latLongStr())
+                    .replace("API_KEY",ACCESS_TOKEN);
+
+
+            HttpClientRequest request = client.get(PORT,HOST, path);
+
+            request.headers().add(ACCEPT,APPLICATION_JSON);
+
+            request.handler(response->{
+
+
+                if(response.statusCode()==200) {
+                    response.bodyHandler(body -> {
+
+                        JsonObject json = body.toJsonObject();
+
+                        JsonArray results = json.getJsonArray("results");
+
+                        Grid theGrid=new Grid();
+                        Path row=new Path();
+                        for(int i=0;i<results.size();i++){
+
+                            JsonObject item=results.getJsonObject(i);
+                            Double elevation=item.getDouble("elevation");
+                            Double lat=item.getJsonObject("location").getDouble("lat");
+                            Double lng=item.getJsonObject("location").getDouble("lng");
+                            Coordinate coord=new Coordinate(lat,lng,elevation);
+
+                            if(item.containsKey("resolution")){
+                                Double resolution=item.getDouble("resolution");
+                                coord.setResolution(resolution);
+
+                            }
+                            row.add(coord);
+
+                            if(i%(samples-1)==0){
+                                theGrid.add(row);
+                                row=new Path();
+                            }
+                        }
+
+                        result.complete(theGrid);
+
 
                     });
                 }else{

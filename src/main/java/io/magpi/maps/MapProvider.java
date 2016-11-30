@@ -1,8 +1,9 @@
 package io.magpi.maps;
 
 import io.magpi.geo.Coordinate;
+import io.magpi.geo.Grid;
 import io.magpi.geo.Path;
-import io.magpi.maps.google_maps.GoogleMapsClient;
+import io.magpi.maps.google.GoogleMapsClient;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -34,4 +35,6 @@ public interface MapProvider{
     Future<Coordinate> getPointElevation(Coordinate point);
 
     Future<Path> getPathElevation(Coordinate start, Coordinate destination, Integer samples);
+
+    Future<Grid> getGridElevation(Coordinate center, Double bearing, Double v, Integer samples);
 }

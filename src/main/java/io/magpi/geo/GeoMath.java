@@ -10,7 +10,7 @@ REF:    http://cdn.rawgit.com/chrisveness/geodesy/v1.1.1/latlon-spherical.js
 */
     private static final Double R=6371e3;
 
-    public static Coordinate destenationPoint(Coordinate startPoint, Double bearing, Integer distance) {
+    public static Coordinate destinationPoint(Coordinate startPoint, Double bearing, Double distance) {
 
         Double δ = distance / R; // angular distance in radians
         Double θ = toRadians(bearing);
@@ -29,6 +29,57 @@ REF:    http://cdn.rawgit.com/chrisveness/geodesy/v1.1.1/latlon-spherical.js
         Double λ2 = λ1 + atan2(y, x);
 
         return new Coordinate( toDegrees(φ2), (toDegrees(λ2)+540)%360-180);
+
+    }
+
+
+
+    public static Grid grid(Coordinate center, Double bearing, Double distance,Integer samples) {
+
+        Coordinate gridStart= GeoMath.gridStart(center,bearing,distance);
+
+        Double gridLineOffset=distance/samples;
+
+        Grid grid=new Grid();
+        Coordinate rowStart=gridStart;
+        for(int i=0;i<samples;i++){
+
+            Path row=gridRow(rowStart,gridLineOffset,bearing,samples);
+            grid.add(row);
+            rowStart=nextRowStart(rowStart,gridLineOffset,bearing);
+        }
+
+
+        return grid;
+    }
+
+    private static Coordinate nextRowStart(Coordinate rowStart, Double gridLineOffset, Double bearing) {
+        Double perpendicularBearing=bearing+270%360;
+
+        return destinationPoint(rowStart,perpendicularBearing,gridLineOffset);
+    }
+
+    private static Path gridRow(Coordinate rowStart, Double gridLineOffset, Double bearing, Integer samples) {
+        Path path=new Path();
+        Coordinate next=rowStart;
+        path.add(next);
+        for(int i=1;i<samples;i++){
+
+            next=destinationPoint(next,bearing,gridLineOffset);
+            path.add(next);
+
+        }
+
+        return path;
+    }
+
+    private static Coordinate gridStart(Coordinate center, Double bearing, Double distance) {
+
+        Double distanceToCorner=sqrt(distance*distance+distance*distance)/2;
+        Double angleToCorner=bearing+145d%360;
+
+        return destinationPoint(center,angleToCorner,distanceToCorner);
+
 
     }
 }
