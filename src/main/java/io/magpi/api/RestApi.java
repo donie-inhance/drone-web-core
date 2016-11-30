@@ -28,6 +28,7 @@ public class RestApi  {
          */
         apiRouter.route(GET,"/elevation").handler(new ElevationHandler());
 
+
         /*
             Given lat , long and bearing calculate a grid
             and return grid as an array of gps coordinates and with elevations
