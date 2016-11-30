@@ -1,5 +1,7 @@
 package io.magpi.maps;
 
+import io.magpi.geo.Coordinate;
+import io.magpi.geo.Path;
 import io.magpi.maps.google_maps.GoogleMapsClient;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
@@ -21,11 +23,15 @@ public interface MapProvider{
             f.complete(client);
         }, handler);
     }
-    Future<Float> getElevation(Float latitude, Float longitude);
 
     static MapProvider provider() {
 
         return new GoogleMapsClient();
         //return new MapboxClient();
     }
+
+
+    Future<Coordinate> getPointElevation(Coordinate point);
+
+    Future<Path> getPathElevation(Coordinate start, Coordinate destination, Integer samples);
 }

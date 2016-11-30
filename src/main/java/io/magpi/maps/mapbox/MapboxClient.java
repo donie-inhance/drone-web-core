@@ -1,8 +1,9 @@
 package io.magpi.maps.mapbox;
 
+import io.magpi.geo.Coordinate;
+import io.magpi.geo.Path;
 import io.magpi.maps.MapProvider;
 import io.vertx.core.Future;
-import io.vertx.core.http.HttpClient;
 
 public class MapboxClient implements MapProvider
 {
@@ -14,20 +15,14 @@ public class MapboxClient implements MapProvider
 
 
 
-    public Future<Float> getElevation(Float latitude, Float longitude) {
 
-        Future<Float> result=Future.future();
-        MapProvider.createHttpClient(ar->{
+    @Override
+    public Future<Coordinate> getPointElevation(Coordinate point) {
+        return null;
+    }
 
-            HttpClient client = ar.result();
-
-            String path="/v4/surface/mapbox.mapbox-terrain-v2.json?" +
-                    "access_token="+ACCESS_TOKEN+
-                    "&layer=contour&fields=ele" +
-                    "&points="+latitude+","+longitude;
-
-        });
-
-        return result;
+    @Override
+    public Future<Path> getPathElevation(Coordinate start, Coordinate destination, Integer samples) {
+        return null;
     }
 }

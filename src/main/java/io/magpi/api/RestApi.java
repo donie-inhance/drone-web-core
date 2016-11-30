@@ -1,7 +1,8 @@
 package io.magpi.api;
 
-import io.magpi.api.handler.ElevationHandler;
-import io.magpi.api.handler.GridHandler;
+import io.magpi.api.handler.PointElevationHandler;
+import io.magpi.api.handler.GridElevationHandler;
+import io.magpi.api.handler.PathElevationHandler;
 import io.vertx.core.Vertx;
 import io.vertx.ext.web.Router;
 
@@ -26,7 +27,10 @@ public class RestApi  {
 
 
          */
-        apiRouter.route(GET,"/elevation").handler(new ElevationHandler());
+        apiRouter.route(GET,"/elevation/point").handler(new PointElevationHandler());
+
+
+        apiRouter.route(GET,"/elevation/path").handler(new PathElevationHandler());
 
         /*
             Given lat , long and bearing calculate a grid
@@ -43,13 +47,13 @@ public class RestApi  {
                     gridOffset ...... meters between grid lines . format integer ...
                                         min 10 .. optional defaults to 50
 
-                    gridDimensions .. size of grid .............. format AxB  ......
+                    gridDimensions .. size of grid .............. format WxL  ......
                                         max A * B =300 ..min A * B = 9 .. optional defailts to 17x17
 
 
 
          */
-        apiRouter.route(GET,"/grid").handler(new GridHandler());
+        apiRouter.route(GET,"/elevation/grid").handler(new GridElevationHandler());
 
 
 

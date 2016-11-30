@@ -1,28 +1,31 @@
 package io.magpi.api.handler;
 
+import io.magpi.geo.Coordinate;
 import io.magpi.maps.MapProvider;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
 
-public class ElevationHandler implements Handler<RoutingContext> {
+public class PointElevationHandler implements Handler<RoutingContext> {
     @Override
     public void handle(RoutingContext event) {
 
-        Float latitude=Float.parseFloat(event.request().params().get("latitude"));
-        Float longitude=Float.parseFloat(event.request().params().get("longitude"));
+        Double latitude=Double.parseDouble(event.request().params().get("latitude"));
+        Double longitude=Double.parseDouble(event.request().params().get("longitude"));
 
         MapProvider maps=MapProvider.provider();
+        Coordinate point=new Coordinate(latitude,longitude);
+        Future<Coordinate> coordinateFuture= maps.getPointElevation(point);
 
-        Future<Float> elevation= maps.getElevation(latitude,longitude);
-
-        elevation.setHandler(res->{
+        coordinateFuture.setHandler(res->{
 
             if(res.succeeded()){
-                JsonObject result=new JsonObject();
-                result.put("elevation",res.result());
-                event.response().end(result.encodePrettily());
+
+                Coordinate coordinate=res.result();
+
+
+                event.response().end(coordinate.json().encodePrettily());
             }else{
                 JsonObject error=new JsonObject();
 
