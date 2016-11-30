@@ -65,7 +65,7 @@ public class RestApi  {
 
                     length .......... length of grid in meters ... optional default 1000
 
-                    samples ......... how many points on a row ... optional default 20
+                    samples ......... how many points on a row ... optional default 10 ...max 14
 
 
 

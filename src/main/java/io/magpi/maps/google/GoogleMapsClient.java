@@ -172,6 +172,7 @@ public class GoogleMapsClient implements MapProvider {
                     .replace("API_KEY",ACCESS_TOKEN);
 
 
+            System.out.println(path);
             HttpClientRequest request = client.get(PORT,HOST, path);
 
             request.headers().add(ACCEPT,APPLICATION_JSON);
@@ -187,26 +188,28 @@ public class GoogleMapsClient implements MapProvider {
                         JsonArray results = json.getJsonArray("results");
 
                         Grid theGrid=new Grid();
-                        Path row=new Path();
-                        for(int i=0;i<results.size();i++){
 
-                            JsonObject item=results.getJsonObject(i);
-                            Double elevation=item.getDouble("elevation");
-                            Double lat=item.getJsonObject("location").getDouble("lat");
-                            Double lng=item.getJsonObject("location").getDouble("lng");
-                            Coordinate coord=new Coordinate(lat,lng,elevation);
 
-                            if(item.containsKey("resolution")){
-                                Double resolution=item.getDouble("resolution");
-                                coord.setResolution(resolution);
+                        for(int j=0;j<samples;j++) {
+                            Path row = new Path();
+
+                            for (int i = 0; i < samples; i++) {
+
+                                JsonObject item = results.getJsonObject(i);
+                                Double elevation = item.getDouble("elevation");
+                                Double lat = item.getJsonObject("location").getDouble("lat");
+                                Double lng = item.getJsonObject("location").getDouble("lng");
+                                Coordinate coord = new Coordinate(lat, lng, elevation);
+
+                                if (item.containsKey("resolution")) {
+                                    Double resolution = item.getDouble("resolution");
+                                    coord.setResolution(resolution);
+
+                                }
+                                row.add(coord);
 
                             }
-                            row.add(coord);
-
-                            if(i%(samples-1)==0){
-                                theGrid.add(row);
-                                row=new Path();
-                            }
+                            theGrid.add(row);
                         }
 
                         result.complete(theGrid);
