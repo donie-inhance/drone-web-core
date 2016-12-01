@@ -17,4 +17,16 @@ public class Path extends ArrayList<Coordinate> implements List<Coordinate> {
 
         return json;
     }
+
+    public String latLongStr() {
+        List<String> locations=new ArrayList<>();
+
+
+        for(Coordinate p:this){
+            locations.add(p.latLongStr());
+        }
+
+
+        return String.join("|",locations);
+    }
 }

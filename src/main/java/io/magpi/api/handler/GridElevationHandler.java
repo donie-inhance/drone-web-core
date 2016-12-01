@@ -44,8 +44,8 @@ public class GridElevationHandler implements Handler<RoutingContext> {
 
                 Grid grid=res.result();
 
-
                 event.response().end(grid.json().encodePrettily());
+
             }else{
                 JsonObject error=new JsonObject();
 

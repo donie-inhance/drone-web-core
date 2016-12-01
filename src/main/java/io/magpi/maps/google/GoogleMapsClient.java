@@ -172,7 +172,6 @@ public class GoogleMapsClient implements MapProvider {
                     .replace("API_KEY",ACCESS_TOKEN);
 
 
-            System.out.println(path);
             HttpClientRequest request = client.get(PORT,HOST, path);
 
             request.headers().add(ACCEPT,APPLICATION_JSON);
@@ -195,7 +194,7 @@ public class GoogleMapsClient implements MapProvider {
 
                             for (int i = 0; i < samples; i++) {
 
-                                JsonObject item = results.getJsonObject(i);
+                                JsonObject item = results.getJsonObject((samples*j)+i);
                                 Double elevation = item.getDouble("elevation");
                                 Double lat = item.getJsonObject("location").getDouble("lat");
                                 Double lng = item.getJsonObject("location").getDouble("lng");

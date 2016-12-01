@@ -44,7 +44,11 @@ REF:    http://cdn.rawgit.com/chrisveness/geodesy/v1.1.1/latlon-spherical.js
         Coordinate rowStart=gridStart;
         for(int i=0;i<samples;i++){
 
+
             Path row=gridRow(rowStart,gridLineOffset,bearing,samples);
+
+
+
             grid.add(row);
             rowStart=nextRowStart(rowStart,gridLineOffset,bearing);
         }

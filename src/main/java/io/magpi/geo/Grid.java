@@ -22,12 +22,12 @@ public class Grid extends ArrayList<Path> implements List<Path> {
     public CharSequence latLongStr() {
         List<String> locations=new ArrayList<>();
 
+
         for(Path p:this){
-            for(Coordinate c:p){
-                locations.add(c.latLongStr());
-            }
+            locations.add(p.latLongStr());
         }
 
-        return locations.stream().collect(Collectors.joining("|"));
+
+        return String.join("|",locations);
     }
 }

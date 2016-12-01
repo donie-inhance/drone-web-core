@@ -22,6 +22,11 @@
             <artifactId>vertx-web</artifactId>
             <version>RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-web-templ-thymeleaf</artifactId>
+            <version>RELEASE</version>
+        </dependency>
     </dependencies>
 
     <build>
